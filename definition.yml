@@ -1,6 +1,6 @@
 id: topslam
-docker_repository: dynverse/dynmethods:topslam
-container_url: https://github.com/dynverse/dynmethods/tree/master/containers/topslam
+docker_repository: dynverse/ti_topslam
+container_url: https://github.com/dynverse/ti_topslam
 name: topslam
 type: algorithm
 platform: Python
