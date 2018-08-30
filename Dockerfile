@@ -1,6 +1,6 @@
 FROM dynverse/dynwrap:py2.7
 
-LABEL version 0.1.0.1
+LABEL version 0.1.0
 
 # install GPy
 RUN git clone https://github.com/SheffieldML/GPy.git ; \
@@ -14,4 +14,4 @@ RUN git clone https://github.com/mzwiessele/topslam.git ; \
     python setup.py develop
 
 ADD . /code
-ENTRYPOINT /code/run.sh
+ENTRYPOINT python /code/run.py
