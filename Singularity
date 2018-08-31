@@ -8,9 +8,10 @@ Bootstrap: shub
 From: dynverse/dynwrap:py2.7
 
 %labels
-    version 0.1.0
+    version 0.1.1
 
 %post
+    chmod -R a+r /code
     git clone https://github.com/SheffieldML/GPy.git ; \
     git clone https://github.com/mzwiessele/topslam.git ; \
 
