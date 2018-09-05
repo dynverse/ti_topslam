@@ -1,20 +1,10 @@
 FROM dynverse/dynwrap:py2.7
 
-LABEL version 0.1.5
+LABEL version 0.1.6
 
-RUN pip install setuptools
+RUN pip install GPy
 
-# install GPy
-RUN git clone https://github.com/SheffieldML/GPy.git && \
-    cd GPy && \
-    python setup.py develop && \
-    cd ..
-
-# install topslam
-RUN git clone https://github.com/mzwiessele/topslam.git && \
-    cd topslam && \
-    python setup.py develop && \
-    cd ..
+RUN pip install git+https://github.com/mzwiessele/topslam.git
 
 ADD . /code
 ENTRYPOINT python /code/run.py
