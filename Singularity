@@ -8,13 +8,14 @@ Bootstrap: shub
 From: dynverse/dynwrap:py2.7
 
 %labels
-    version 0.1.4
+    version 0.1.5
 
 %files
     . /code
 
 %post
     chmod -R 755 '/code'
+    pip install setuptools
     git clone https://github.com/SheffieldML/GPy.git && \
       cd GPy && \
       python setup.py develop && \

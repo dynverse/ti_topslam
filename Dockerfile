@@ -1,6 +1,8 @@
 FROM dynverse/dynwrap:py2.7
 
-LABEL version 0.1.4
+LABEL version 0.1.5
+
+RUN pip install setuptools
 
 # install GPy
 RUN git clone https://github.com/SheffieldML/GPy.git && \
