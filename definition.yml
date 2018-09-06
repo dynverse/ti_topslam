@@ -1,5 +1,6 @@
 id: topslam
 docker_repository: dynverse/ti_topslam
+singularity_collection: 1584
 container_url: https://github.com/dynverse/ti_topslam
 name: topslam
 type: algorithm
