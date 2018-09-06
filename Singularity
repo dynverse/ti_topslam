@@ -8,7 +8,7 @@ Bootstrap: shub
 From: dynverse/dynwrap:py2.7
 
 %labels
-    version 0.1.6
+    version 0.1.7
 
 %files
     . /code
@@ -16,7 +16,7 @@ From: dynverse/dynwrap:py2.7
 %post
     chmod -R 755 '/code'
     pip install GPy
-    pip install git+https://github.com/mzwiessele/topslam.git
+    cd / && git clone https://github.com/mzwiessele/topslam.git
 
 %runscript
     exec python /code/run.py
