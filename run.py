@@ -3,11 +3,11 @@ import matplotlib
 matplotlib.use('PS')
 
 # add topslam to syspath
-import os
+import sys
 sys.path.insert(0, "/topslam")
 
 # import topslam and others
-import sys
+import os
 import json
 import pandas as pd
 import topslam
