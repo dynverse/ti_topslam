@@ -1,6 +1,6 @@
 FROM dynverse/dynwrap:py2.7
 
-LABEL version 0.1.7
+LABEL version 0.1.8
 
 RUN pip install GPy
 
