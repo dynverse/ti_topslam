@@ -8,7 +8,7 @@ Bootstrap: shub
 From: dynverse/dynwrap:py2.7
 
 %labels
-    version 0.1.8
+    version 0.1.10
 
 %files
     . /code
