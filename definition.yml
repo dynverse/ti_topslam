@@ -24,9 +24,7 @@ container:
 wrapper:
   type: linear_trajectory
   topology_inference: fixed
-  trajectory_types:
-  - linear
-  example: /code/example.R
+  trajectory_types: linear
   input_required:
   - expression
   - start_id
