@@ -27,7 +27,7 @@ checkpoints = {}
 #   Load data                                                               ####
 
 expression = task["expression"]
-p = task["params"]
+p = task["parameters"]
 start_id = task["priors"]["start_id"]
 if isinstance(start_id, list):
   start_id = np.random.choice(start_id)
