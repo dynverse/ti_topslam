@@ -1,68 +1,79 @@
-id: topslam
-docker_repository: dynverse/ti_topslam
-singularity_collection: 1584
-container_url: https://github.com/dynverse/ti_topslam
-name: topslam
-source: tool
-platform: Python
-parameters:
-  n_components:
-    description: the number of components
-    type: integer
-    lower: 2
-    default: 2
-    upper: 10
-  n_neighbors:
-    description: the number of neighbors
-    type: integer
-    lower: 2
-    default: 10
-    upper: 100
-  linear_dims:
-    type: integer
-    lower: 0
-    default: 0
-    upper: 5
-  max_iters:
-    description: the number of iterations to optimize over
-    type: integer
-    lower: 10
-    upper: 10000
-    default: 1000
-    distribution: expuniform
-  dimreds:
-    descriptions: which dimensionality reductions to use; tSNE, PCA, Spectral, Isomap
-      and/or ICA
-    type: logical_vector
-    length: 5
-    default:
-    - yes
-    - yes
-    - yes
-    - yes
-    - yes
-input:
-  format: text
-  required:
+method:
+  id: topslam
+  name: topslam
+  tool_id: topslam
+  source: tool
+  platform: Python
+  url: https://github.com/mzwiessele/topslam
+  license: BSD-3
+  authors:
+  - given: Max
+    family: Zwiessele
+    email: ibinbei@gmail.com
+    github: mzwiessele
+
+manuscript:
+  doi: 10.1101/057778
+  google_scholar_cluster_id: '17023695402130493397'
+  preprint_date: '2017-02-13'
+
+container:
+  url: https://github.com/dynverse/ti_topslam
+  docker: dynverse/ti_topslam
+
+wrapper:
+  type: linear_trajectory
+  topology_inference: fixed
+  trajectory_types: linear
+  input_required:
   - expression
   - start_id
-output:
-  format: text
-  outputs:
-  - linear_trajectory
-  - dimred
-  - timings
-wrapper_type: linear_trajectory
-doi: 10.1101/057778
-google_scholar_cluster_id: '17023695402130493397'
-trajectory_types:
-- linear
-topology_inference: fixed
-license: BSD-3
-authors:
-- given: Max
-  family: Zwiessele
-  email: ibinbei@gmail.com
-  github: mzwiessele
-preprint_date: '2017-02-13'
-code_url: https://github.com/mzwiessele/topslam
+
+parameters:
+  - id: n_components
+    description: the number of components
+    type: integer
+    distribution:
+      type: uniform
+      lower: 2
+      upper: 10
+    default: 2
+  - id: n_neighbors
+    description: the number of neighbors
+    type: integer
+    distribution:
+      type: uniform
+      lower: 2
+      upper: 100
+    default: 10
+  - id: linear_dims
+    type: integer
+    distribution:
+      type: uniform
+      lower: 0
+      upper: 5
+    default: 0
+  - id: max_iters
+    description: the number of iterations to optimize over
+    type: integer
+    distribution:
+      type: expuniform
+      lower: 10
+      upper: 10000
+    default: 1000
+  - id: dimreds
+    description: which dimensionality reductions to use
+      and/or ICA
+    type: subset
+    values:
+    - t-SNE
+    - PCA
+    - Spectral
+    - Isomap
+    - ICA
+    default:
+    - t-SNE
+    - PCA
+    - Spectral
+    - Isomap
+    - ICA

@@ -1,3 +1,8 @@
+#!/usr/local/bin/python
+
+import dynclipy
+task = dynclipy.main()
+
 # force matplotlib backend, to avoid tkinter problems (through GPy)
 import matplotlib
 matplotlib.use('PS')
@@ -10,6 +15,7 @@ sys.path.insert(0, "/topslam")
 import os
 import json
 import pandas as pd
+import numpy as np
 import topslam
 from topslam.optimization import run_methods, create_model, optimize_model
 from topslam import ManifoldCorrectionTree
@@ -17,13 +23,14 @@ from topslam import ManifoldCorrectionTree
 import time
 checkpoints = {}
 
-
 #   ____________________________________________________________________________
 #   Load data                                                               ####
 
-expression = pd.read_csv("/ti/input/expression.csv", index_col=[0])
-p = json.load(open("/ti/input/params.json", "r"))
-start_id = json.load(open("/ti/input/start_id.json"))
+expression = task["expression"]
+p = task["parameters"]
+start_id = task["priors"]["start_id"]
+if isinstance(start_id, list):
+  start_id = np.random.choice(start_id)
 
 checkpoints["method_afterpreproc"] = time.time()
 
@@ -44,7 +51,7 @@ methods = {
 }
 method_names = sorted(methods.keys())
 method_names_selected = [method_names[i] for i, selected in enumerate(p["dimreds"]) if selected]
-methods = {method_name:method for method_name, method in methods.iteritems() if method_name in method_names_selected}
+methods = {method_name:method for method_name, method in methods.items() if method_name in method_names_selected}
 
 # dimensionality reduction
 X_init, dims = run_methods(expression, methods)
@@ -55,7 +62,7 @@ m.optimize(messages=1, max_iters=p["max_iters"])
 
 # manifold correction
 m_topslam = ManifoldCorrectionTree(m)
-start_cell_ix = expression.index.tolist().index(start_id[0])
+start_cell_ix = expression.index.tolist().index(start_id)
 pt_topslam = m_topslam.get_pseudo_time(start=start_cell_ix, estimate_direction=True)
 
 # calculate landscape
@@ -65,21 +72,26 @@ checkpoints["method_aftermethod"] = time.time()
 
 #   ____________________________________________________________________________
 #   Process & save output                                                   ####
-cell_ids = pd.DataFrame({
-  "cell_ids": expression.index
-})
-cell_ids.to_csv("/ti/output/cell_ids.csv", index=False)
+
+dataset = dynclipy.wrap_data(cell_ids = expression.index)
 
 pseudotime = pd.DataFrame({
   "cell_id": expression.index,
   "pseudotime": pt_topslam
 })
-pseudotime.to_csv("/ti/output/pseudotime.csv", index=False)
-pd.DataFrame(landscape[0], columns=["x", "y"]).to_csv("/ti/output/wad_grid.csv", index=False)
-pd.DataFrame(landscape[1], columns=["energy"]).to_csv("/ti/output/wad_energy.csv", index=False)
+
+dataset.add_linear_trajectory(pseudotime = pseudotime)
+
+# pd.DataFrame(landscape[0], columns=["x", "y"]).to_csv("/ti/output/wad_grid.csv", index=False)
+# pd.DataFrame(landscape[1], columns=["energy"]).to_csv("/ti/output/wad_energy.csv", index=False)
+
 dimred = pd.DataFrame(landscape[2], columns=["comp_" + str(i+1) for i in range(landscape[2].shape[1])])
 dimred["cell_id"] = expression.index
-dimred.to_csv("/ti/output/dimred.csv", index=False)
+
+dataset.add_dimred(dimred)
 
 # timings
-json.dump(checkpoints, open("/ti/output/timings.json", "w"))
+dataset.add_timings(checkpoints)
+
+# save
+dataset.write_output(task["output"])

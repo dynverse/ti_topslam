@@ -1,10 +1,11 @@
-FROM dynverse/dynwrap:py2.7
+FROM dynverse/dynwrappy:v0.1.0
 
-RUN pip install GPy
+ARG GITHUB_PAT
+
+RUN pip install git+https://github.com/SheffieldML/GPy.git
 
 RUN cd / && git clone https://github.com/mzwiessele/topslam.git
 
-LABEL version 0.1.10
+COPY definition.yml run.py example.sh /code/
 
-ADD . /code
-ENTRYPOINT python /code/run.py
+ENTRYPOINT ["/code/run.py"]
